@@ -79,12 +79,16 @@
                     <div>
                         <h2>To do tasks</h2>
                         <hr>
-                        <div id="sort">
+                        {!! Form::model(['route' => ['task.filter', 'dasdasda'], 'method' => 'POST']) !!}
                             <h3>Sort tasks by: </h3>
-                            <label class="checkbox-inline"><input type="radio" name="sort" value="1">Due date</label>
-                            <label class="checkbox-inline"><input type="radio" name="sort" value="2">Priority level</label>
-                            <label class="checkbox-inline"><input type="radio" name="sort" value="3">Project id</label>
-                        </div>
+                            <label class="checkbox-inline"><input type="radio" name="radsort" value="1">Due date</label>
+                            <label class="checkbox-inline"><input type="radio" name="radsort" value="2">Priority level</label>
+                            <label class="checkbox-inline"><input type="radio" name="radsort" value="3">Project id</label>
+                            <label class="checkbox-inline"><input type="radio" name="radsort" value="4">All</label>
+                            <br>
+                            {{ Form::hidden('_method', 'PUT') }}
+                            {{ Form::submit('Sort') }}
+                        {!! Form::close() !!}
 
                         @if(count($myTasks) > 0)
                             <table class="table table striped">

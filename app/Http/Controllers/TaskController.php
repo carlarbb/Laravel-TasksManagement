@@ -153,4 +153,23 @@ class TaskController extends Controller
         $task->delete();
         return redirect()->route('dashboard')->with('success', 'Task Removed');
     }
+
+    public function filter($myTasks){
+        print_r($myTasks);
+        // $val_radio = $_POST['radsort']; //find which radio button wad checked in form 
+        // if($val_radio == '1'){
+        //     $key = 'due_date';
+        // }
+        // else if($val_radio == '2'){
+        //     $key = 'priority_level';
+        // }
+        //     else if($val_radio == '3'){
+        //         $key = 'project_id';
+        //           }
+        //         else {
+        //         $key = 'due_date, priority_level, project_id';
+        //         }
+        // $sorted = $myTasks->sortBy($key);
+        // $sorted->values()->all();
+    }
 }

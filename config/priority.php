@@ -1,8 +1,8 @@
 <?php
-return array( 'priority' => array(
+return ['priority' => [
    '1' => 'low',
    '2' => 'medium',
    '3' => 'high'
-    ),
-);
+],
+];
 ?>

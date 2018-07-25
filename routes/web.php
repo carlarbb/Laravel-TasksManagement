@@ -18,3 +18,4 @@ Auth::routes();
 Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::resource('/project', 'ProjectController');
 Route::resource('/task', 'TaskController');
+Route::patch('/task/filter/{id}',['as' => 'task.filter', 'uses' => 'TaskController@filter']);
