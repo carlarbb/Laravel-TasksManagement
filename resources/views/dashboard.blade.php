@@ -59,6 +59,7 @@
                                 </tr>
                                 @foreach($myTasks as $task)
                                     <tr>
+                                        <?php dd($task->id); ?>
                                         <td>{{ $task->title }}</td>
                                         <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
                                         <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
@@ -79,18 +80,18 @@
                     <div>
                         <h2>To do tasks</h2>
                         <hr>
-                        {!! Form::model(['route' => ['task.filter', 'dasdasda'], 'method' => 'POST']) !!}
-                            <h3>Sort tasks by: </h3>
-                            <label class="checkbox-inline"><input type="radio" name="radsort" value="1">Due date</label>
-                            <label class="checkbox-inline"><input type="radio" name="radsort" value="2">Priority level</label>
-                            <label class="checkbox-inline"><input type="radio" name="radsort" value="3">Project id</label>
-                            <label class="checkbox-inline"><input type="radio" name="radsort" value="4">All</label>
-                            <br>
-                            {{ Form::hidden('_method', 'PUT') }}
-                            {{ Form::submit('Sort') }}
-                        {!! Form::close() !!}
-
-                        @if(count($myTasks) > 0)
+                    
+                        @if(count($tasksForMe) > 0)
+                            {!! Form::open(['action' => ['TaskController@filter', $ser], 'method' => 'GET']) !!}
+                                <h3>Sort tasks by: </h3>
+                                <label class="checkbox-inline"><input type="radio" name="radsort" value="1">Due date</label>
+                                <label class="checkbox-inline"><input type="radio" name="radsort" value="2">Priority level</label>
+                                <label class="checkbox-inline"><input type="radio" name="radsort" value="3">Project id</label>
+                                <label class="checkbox-inline"><input type="radio" name="radsort" value="4">All</label>
+                                <br>
+                                {{ Form::submit('Sort') }}
+                            {!! Form::close() !!}
+                            
                             <table class="table table striped">
                                 <tr>
                                     <th>Title</th>
@@ -98,7 +99,7 @@
                                     <th>Edit</th>
                                     <th>Delete</th>
                                 </tr>
-                                @foreach($myTasks as $task)
+                                @foreach($tasksForMe as $task)
                                     <tr>
                                         <td>{{ $task->title }}</td>
                                         <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
@@ -113,7 +114,7 @@
                                 @endforeach
                             </table>
                         @else
-                            <p>You have no tasks</p>
+                            <p>No to-do tasks</p>
                         @endif
                     </div>
                 </div>

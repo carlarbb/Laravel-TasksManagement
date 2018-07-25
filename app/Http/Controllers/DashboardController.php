@@ -26,12 +26,18 @@ class DashboardController extends Controller
      */
     public function index()
     {
+        $eu = 'Carla';
         $user_id = auth()->user()->id;
         $user = User::find($user_id);
         $myProjects = DB::table('projects')->where('created_by_id', Auth::user()->id)->get();
         $myTasks = DB::table('tasks')->where('created_by_id', Auth::user()->id)->get();
+        $tasksForMe = DB::table('tasks')->where('receiver_id', Auth::user()->id)->get();
+        $ser = serialize($tasksForMe->toArray());
         return view('dashboard')->with('user', $user)
                                 ->with('myProjects', $myProjects)
-                                ->with('myTasks', $myTasks);
+                                ->with('myTasks', $myTasks)
+                                ->with('tasksForMe', $tasksForMe)
+                                ->with('ser', $ser)
+                                ->with('eu', $eu);
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 use App\Task;
 use Illuminate\Support\Facades\Config;
 use App\User;
+
 class TaskController extends Controller
 {
     /**
@@ -27,24 +28,31 @@ class TaskController extends Controller
      */
     public function create()
     {
-        $project_ids = array();
+        $project_ids = [];
+        //You must create a project before you create any tasks
         $p= DB::table('projects')->get();
-        foreach($p as $project){
-            $arrayProj = [$project->id => $project->id];
-            $project_ids = $project_ids + $arrayProj;
+        if($p->isEmpty()){
+            $message = 'Action not allowed! First, you must create a project!';
+            return redirect()->route('project.create')->with('problem1', $message);
+            //sau return redirect()->route('project.create')->with('error', $message)	
+        }else{
+            foreach($p as $project){
+                $arrayProj = [$project->id => $project->id];
+                $project_ids = $project_ids + $arrayProj;
+            }
+    
+            $user_ids = [];
+            $u = DB::table('users')->get();
+            foreach($u as $user){
+                $arrayUser = [$user->id => $user->id];
+                $user_ids = $user_ids + $arrayUser; //concatenate arrays
+            }
+           
+            return view('pages.create_task')->with('project_ids', $project_ids) 
+                                            ->with('status', Config::get('status.status'))
+                                            ->with('priority', Config::get('priority.priority'))
+                                            ->with('user_ids', $user_ids);
         }
-
-        $user_ids = array();
-        $u = DB::table('users')->get();
-        foreach($u as $user){
-            $arrayUser = [$user->id => $user->id];
-            $user_ids = $user_ids + $arrayUser; //concatenate arrays
-        }
-       
-        return view('pages.create_task')->with('project_ids', $project_ids) 
-                                        ->with('status', Config::get('status.status'))
-                                        ->with('priority', Config::get('priority.priority'))
-                                        ->with('user_ids', $user_ids);
     }
 
     /** 
@@ -60,24 +68,28 @@ class TaskController extends Controller
             'body' => 'required',
             'due_date' => 'required' 
         ]);
+        //You are not allowed to set tasks for yourself
+        if($request->receiver_id == auth()->user()->id){
+            $message = 'You are not allowed to set tasks for yourself';
+            return redirect()->route('task.create')->with('problem2', $message);
+        }else{
+            $task = new Task;
+            $task->title = $request->title;
+            $task->content = $request->body;
+            $task->created_by_id = $request->user()->id;
+            $date = $request->due_date;
+            $task->due_date = $date;
 
-        $task = new Task;
-        $task->title = $request->title;
-        $task->content = $request->body;
-        $task->created_by_id = $request->user()->id;
+            $task->status = $request->status;
+            $task->priority_level = $request->priority;
+            $task->project_id = $request->project_id;
+            $task->receiver_id = $request->receiver_id;
+            print_r($request->due_date);    
+            $task->save();
 
-        $date = $request->due_date;
-        $task->due_date = $date;
-
-        $task->status = $request->status;
-        $task->priority_level = $request->priority;
-        $task->project_id = $request->project_id;
-        $task->receiver_id = $request->receiver_id;
-        print_r($request->due_date);    
-        $task->save();
-
-        //set a success message when redirect
-        return redirect()->route('task.create')->with('success', 'Task Created');
+            //set a success message when redirect
+            return redirect()->route('task.create')->with('success', 'Task Created');
+        }
     }
 
     /**
@@ -154,8 +166,8 @@ class TaskController extends Controller
         return redirect()->route('dashboard')->with('success', 'Task Removed');
     }
 
-    public function filter($myTasks){
-        print_r($myTasks);
+    public function filter($v){
+        print_r($v);
         // $val_radio = $_POST['radsort']; //find which radio button wad checked in form 
         // if($val_radio == '1'){
         //     $key = 'due_date';
