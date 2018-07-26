@@ -13,7 +13,7 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                   <div>
+                   <div class="pt-3">
                         <h2>Created projects</h2>
                         <hr>
                         <a class="btn btn-primary btn-lg" href="{{ route('project.create') }}" role="button">Add new project</a>
@@ -59,7 +59,6 @@
                                 </tr>
                                 @foreach($myTasks as $task)
                                     <tr>
-                                        <?php dd($task->id); ?>
                                         <td>{{ $task->title }}</td>
                                         <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
                                         <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
@@ -77,12 +76,12 @@
                         @endif
                     </div>
 
-                    <div>
+                    <div class="pt-5">
                         <h2>To do tasks</h2>
                         <hr>
-                    
+                        
                         @if(count($tasksForMe) > 0)
-                            {!! Form::open(['action' => ['TaskController@filter', $ser], 'method' => 'GET']) !!}
+                            {!! Form::open(['action' => 'TaskController@filter', 'method' => 'POST', 'id' => 'form']) !!}
                                 <h3>Sort tasks by: </h3>
                                 <label class="checkbox-inline"><input type="radio" name="radsort" value="1">Due date</label>
                                 <label class="checkbox-inline"><input type="radio" name="radsort" value="2">Priority level</label>
@@ -92,27 +91,32 @@
                                 {{ Form::submit('Sort') }}
                             {!! Form::close() !!}
                             
-                            <table class="table table striped">
+                        @if(session('sorted')) 
+                          <?php $tasks = session('sorted'); ?>
+                        @else
+                            <?php $tasks=$tasksForMe ?>
+                        @endif
+                        <table class="table table striped">
+                            <tr>
+                                <th>Title</th>
+                                <th>Info</th>
+                                <th>Edit</th>
+                                <th>Delete</th>
+                            </tr>
+                            @foreach($tasks as $task)
                                 <tr>
-                                    <th>Title</th>
-                                    <th>Info</th>
-                                    <th>Edit</th>
-                                    <th>Delete</th>
+                                    <td>{{ $task->title }}</td>
+                                    <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
+                                    <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
+                                    <td>
+                                        {!! Form::open(['action' => ['TaskController@destroy', $task->id], 'method' => 'POST']) !!}
+                                            {{ Form::hidden('_method', 'DELETE') }}
+                                            {{ Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) }}
+                                        {!! Form::close() !!}
+                                    </td>
                                 </tr>
-                                @foreach($tasksForMe as $task)
-                                    <tr>
-                                        <td>{{ $task->title }}</td>
-                                        <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
-                                        <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
-                                        <td>
-                                            {!! Form::open(['action' => ['TaskController@destroy', $task->id], 'method' => 'POST']) !!}
-                                                {{ Form::hidden('_method', 'DELETE') }}
-                                                {{ Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) }}
-                                            {!! Form::close() !!}
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </table>
+                            @endforeach
+                        </table>
                         @else
                             <p>No to-do tasks</p>
                         @endif

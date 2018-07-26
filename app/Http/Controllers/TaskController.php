@@ -36,6 +36,7 @@ class TaskController extends Controller
             return redirect()->route('project.create')->with('problem1', $message);
             //sau return redirect()->route('project.create')->with('error', $message)	
         }else{
+            $p->sortBy('count')->reverse(); //sort projects by count field in descending order
             foreach($p as $project){
                 $arrayProj = [$project->id => $project->id];
                 $project_ids = $project_ids + $arrayProj;
@@ -83,6 +84,8 @@ class TaskController extends Controller
             $task->status = $request->status;
             $task->priority_level = $request->priority;
             $task->project_id = $request->project_id;
+            $proj = Project::find($task->project_id);
+            $proj->count++;
             $task->receiver_id = $request->receiver_id;
             print_r($request->due_date);    
             $task->save();
@@ -166,22 +169,22 @@ class TaskController extends Controller
         return redirect()->route('dashboard')->with('success', 'Task Removed');
     }
 
-    public function filter($v){
-        print_r($v);
-        // $val_radio = $_POST['radsort']; //find which radio button wad checked in form 
-        // if($val_radio == '1'){
-        //     $key = 'due_date';
-        // }
-        // else if($val_radio == '2'){
-        //     $key = 'priority_level';
-        // }
-        //     else if($val_radio == '3'){
-        //         $key = 'project_id';
-        //           }
-        //         else {
-        //         $key = 'due_date, priority_level, project_id';
-        //         }
-        // $sorted = $myTasks->sortBy($key);
-        // $sorted->values()->all();
+    public function filter(){
+        $tasksForMe = auth()->user()->received_tasks;
+        $value = $_POST['radsort'];
+        if($value == '1'){
+            $sorted = $tasksForMe->sortBy('due_date');
+        }
+        else if($value == '2'){
+            $sorted = $tasksForMe->sortBy('priority_level');
+        }
+        else if($value == '3'){
+            $sorted = $tasksForMe->sortBy('project_id');
+        }
+        else {
+            $sorted = $tasksForMe->sortBy('due_date')->sortBy('priority_level')->sortBy('project_id');
+        }
+
+        return redirect()->route('dashboard')->with('sorted', $sorted);
     }
 }

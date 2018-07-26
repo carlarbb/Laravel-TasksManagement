@@ -47,6 +47,7 @@ class ProjectController extends Controller
         $pr->title = $request->title;
         $pr->description = $request->description;
         $pr->created_by_id = $request->user()->id;
+        $pr->count = 0;
         $pr->save();
 
         //set a success message when redirect
