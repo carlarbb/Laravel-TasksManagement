@@ -36,22 +36,25 @@ class TaskController extends Controller
             return redirect()->route('project.create')->with('problem1', $message);
             //sau return redirect()->route('project.create')->with('error', $message)	
         }else{
-            $p->sortBy('count')->reverse(); //sort projects by count field in descending order
+            //sort projects by count field in descending order 
+            $p = $p->sortByDesc('count'); 
             foreach($p as $project){
-                $arrayProj = [$project->id => $project->id];
+                $arrayProj = [$project->id => $project->title];
                 $project_ids = $project_ids + $arrayProj;
             }
     
             $user_ids = [];
             $u = DB::table('users')->get();
+            //sort users by count field in descending order 
+            $u = $u->sortByDesc('count');
             foreach($u as $user){
-                $arrayUser = [$user->id => $user->id];
+                $arrayUser = [$user->id => $user->name];
                 $user_ids = $user_ids + $arrayUser; //concatenate arrays
             }
-           
+
             return view('pages.create_task')->with('project_ids', $project_ids) 
-                                            ->with('status', Config::get('status.status'))
-                                            ->with('priority', Config::get('priority.priority'))
+                                            ->with('status', Config::get('status'))
+                                            ->with('priority', Config::get('priority'))
                                             ->with('user_ids', $user_ids);
         }
     }
@@ -84,10 +87,15 @@ class TaskController extends Controller
             $task->status = $request->status;
             $task->priority_level = $request->priority;
             $task->project_id = $request->project_id;
+
+            //use count attribute for displaying the users and projects selects ordered by last choices 
             $proj = Project::find($task->project_id);
             $proj->count++;
             $task->receiver_id = $request->receiver_id;
-            print_r($request->due_date);    
+            $user = User::find($task->receiver_id);
+            $user->count++;
+            $proj->save();
+            $user->save();  
             $task->save();
 
             //set a success message when redirect
@@ -121,10 +129,14 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         //Check for correct user
-        if(auth()->user()->id !== $task->created_by_id){
-           return redirect()->route('dashboard')->with('error', 'Unauthorized Page');
+        if(auth()->user()->id != $task->created_by_id){
+           $readonly = 'true';
         }
-        return view('pages.edit_task')->with('task', $task);
+        else{
+            $readonly = 'false';
+        }
+        return view('pages.edit_task')->with('task', $task)
+                                      ->with('readonly', $readonly);
     }
 
     /**

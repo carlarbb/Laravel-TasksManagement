@@ -104,6 +104,8 @@
                                 <th>Delete</th>
                             </tr>
                             @foreach($tasks as $task)
+                                {{-- @if($task->due_date >= Carbon\Carbon::now()->toDateTimeString())  --}}
+                                @if($task->status != 'completed')
                                 <tr>
                                     <td>{{ $task->title }}</td>
                                     <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
@@ -115,6 +117,7 @@
                                         {!! Form::close() !!}
                                     </td>
                                 </tr>
+                                @endif 
                             @endforeach
                         </table>
                         @else
