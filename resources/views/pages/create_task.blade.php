@@ -15,23 +15,23 @@
         </div> 
         <div class="form-group">
             {{ Form::label('project_id', 'Project Id:') }}
-            {{ Form::select('project_id', $project_ids, null, ['class' => 'form-control']) }}
+            {{ Form::select('project_id', $project_ids, '', ['class' => 'form-control']) }}
         </div>
         <div class="form-group">
             {{ Form::label('status', 'Task Status:') }}
-            {{ Form::select('status', $status, null, ['class' => 'form-control']) }}
+            {{ Form::select('status', $status, '', ['class' => 'form-control']) }}
         </div>
         <div class="form-group">
             {{ Form::label('priority', 'Task Priority:') }}
-            {{ Form::select('priority', $priority, null, ['class' => 'form-control']) }}
+            {{ Form::select('priority', $priority, '', ['class' => 'form-control']) }}
             </div>
         <div class="form-group">
             {{ Form::label('due_date', 'Due Date:') }}
-            {{ Form::date('due_date', null, ['class' => 'form-control', 'id' => 'date']) }}
+            {{ Form::date('due_date', '', ['class' => 'form-control', 'id' => 'date']) }}
         </div>
         <div>
             {{ Form::label('receiver_id', 'For user:') }}
-            {{ Form::select('receiver_id', $user_ids, null, ['class' => 'form-control']) }}
+            {{ Form::select('receiver_id', $user_ids, '', ['class' => 'form-control']) }}
         </div>
         {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
     {!! Form::close() !!}  

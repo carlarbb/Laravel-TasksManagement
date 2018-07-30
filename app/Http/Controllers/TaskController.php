@@ -26,8 +26,7 @@ class TaskController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public static function getProjectIds(){
         $project_ids = [];
         //You must create a project before you create any tasks
         $p= DB::table('projects')->get();
@@ -42,21 +41,30 @@ class TaskController extends Controller
                 $arrayProj = [$project->id => $project->title];
                 $project_ids = $project_ids + $arrayProj;
             }
-    
-            $user_ids = [];
-            $u = DB::table('users')->get();
-            //sort users by count field in descending order 
-            $u = $u->sortByDesc('count');
-            foreach($u as $user){
-                $arrayUser = [$user->id => $user->name];
-                $user_ids = $user_ids + $arrayUser; //concatenate arrays
-            }
+        }
+        return $project_ids;
+    }
+
+    public static function getUserIds(){
+        $user_ids = [];
+        $u = DB::table('users')->get();
+        //sort users by count field in descending order 
+        $u = $u->sortByDesc('count');
+        foreach($u as $user){
+            $arrayUser = [$user->id => $user->name];
+            $user_ids = $user_ids + $arrayUser; //concatenate arrays
+        }
+        return $user_ids;
+    }
+    public function create()
+    {
+            $project_ids = self::getProjectIds();
+            $user_ids = self::getUserIds();
 
             return view('pages.create_task')->with('project_ids', $project_ids) 
                                             ->with('status', Config::get('status'))
                                             ->with('priority', Config::get('priority'))
                                             ->with('user_ids', $user_ids);
-        }
     }
 
     /** 
@@ -83,7 +91,6 @@ class TaskController extends Controller
             $task->created_by_id = $request->user()->id;
             $date = $request->due_date;
             $task->due_date = $date;
-
             $task->status = $request->status;
             $task->priority_level = $request->priority;
             $task->project_id = $request->project_id;
@@ -127,16 +134,23 @@ class TaskController extends Controller
      */
     public function edit($id)
     {
+        $project_ids = self::getProjectIds();
+        $user_ids = self::getUserIds();
         $task = Task::find($id);
         //Check for correct user
         if(auth()->user()->id != $task->created_by_id){
-           $readonly = 'true';
+           $readonly = true;
         }
         else{
-            $readonly = 'false';
+            $readonly = false;
         }
+    
         return view('pages.edit_task')->with('task', $task)
-                                      ->with('readonly', $readonly);
+                                      ->with('readonly', $readonly)
+                                      ->with('project_ids', $project_ids) 
+                                      ->with('user_ids', $user_ids) 
+                                      ->with('status', Config::get('status'))
+                                      ->with('priority', Config::get('priority'));
     }
 
     /**
@@ -148,18 +162,47 @@ class TaskController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'title' => 'required',
-            'body' => 'required'
-        ]);
-        
         $task = Task::find($id);
-        $task->title = $request->title;
-        $task->content = $request->body;
-        $task->created_by_id = $request->user()->id;
+        
+        if(auth()->user()->id == $task->created_by_id){
+            $this->validate($request, [
+                'title' => 'required',
+                'body' => 'required',
+                'due_date' => 'required'
+            ]);
+            if($request->receiver_id == auth()->user()->id){
+                $message = 'You are not allowed to set tasks for yourself';
+                return redirect()->route('task.edit', $task->id)->with('problem1', $message);
+            }
+            else{
+                $task->receiver_id = $request->receiver_id;
+                $task->title = $request->title;
+                $task->content = $request->body;
+                $task->status = $request->status;
+                $task->priority_level = $request->priority;
+                $task->project_id = $request->project_id;
+            }
+        }
+        else{
+            $c = count(Config::get('status'));
+            if($request->status == $c)
+            {
+                $task->completed = 1;
+                $task->save();
+                return redirect()->route('dashboard')->with('success', 'Completed task');
+            }
+            else
+            {
+                if($request->receiver_id != $task->created_by_id){
+                    $task->receiver_id = $request->receiver_id;
+                }else{
+                    $message = 'You are not allowed to set tasks for yourself';
+                    return redirect()->route('task.edit', $task->id)->with('problem1', $message);
+                }
+                $task->status = $request->status;
+            }
+        }
         $task->save();
-
-        //set a success message when redirect
         return redirect()->route('dashboard')->with('success', 'Task Updated Successfully');
     }
 

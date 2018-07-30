@@ -24,9 +24,3 @@
         alert("<?php echo session('problem1') ?>");
     </script>
 @endif
-
-@if(session('problem2'))
-    <script>
-        alert("<?php echo session('problem2') ?>");
-    </script>
-@endif

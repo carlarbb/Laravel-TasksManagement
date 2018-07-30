@@ -56,6 +56,7 @@
                                     <th>Info</th>
                                     <th>Edit</th>
                                     <th>Delete</th>
+                                    <th>Completed</th>
                                 </tr>
                                 @foreach($myTasks as $task)
                                     <tr>
@@ -67,6 +68,13 @@
                                                 {{ Form::hidden('_method', 'DELETE') }}
                                                 {{ Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) }}
                                             {!! Form::close() !!}
+                                        </td>
+                                        <td> 
+                                            @if($task->completed)
+                                                Yes
+                                            @else
+                                                No
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach
@@ -101,7 +109,6 @@
                                 <th>Title</th>
                                 <th>Info</th>
                                 <th>Edit</th>
-                                <th>Delete</th>
                             </tr>
                             @foreach($tasks as $task)
                                 {{-- @if($task->due_date >= Carbon\Carbon::now()->toDateTimeString())  --}}
@@ -110,12 +117,6 @@
                                     <td>{{ $task->title }}</td>
                                     <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
                                     <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
-                                    <td>
-                                        {!! Form::open(['action' => ['TaskController@destroy', $task->id], 'method' => 'POST']) !!}
-                                            {{ Form::hidden('_method', 'DELETE') }}
-                                            {{ Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) }}
-                                        {!! Form::close() !!}
-                                    </td>
                                 </tr>
                                 @endif 
                             @endforeach
