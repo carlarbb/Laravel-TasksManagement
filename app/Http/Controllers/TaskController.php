@@ -58,13 +58,13 @@ class TaskController extends Controller
     }
     public function create()
     {
-            $project_ids = self::getProjectIds();
-            $user_ids = self::getUserIds();
+        $project_ids = self::getProjectIds();
+        $user_ids = self::getUserIds();
 
-            return view('pages.create_task')->with('project_ids', $project_ids) 
-                                            ->with('status', Config::get('status'))
-                                            ->with('priority', Config::get('priority'))
-                                            ->with('user_ids', $user_ids);
+        return view('pages.create_task')->with('project_ids', $project_ids) 
+                                        ->with('status', Config::get('status'))
+                                        ->with('priority', Config::get('priority'))
+                                        ->with('user_ids', $user_ids);
     }
 
     /** 
@@ -83,7 +83,7 @@ class TaskController extends Controller
         //You are not allowed to set tasks for yourself
         if($request->receiver_id == auth()->user()->id){
             $message = 'You are not allowed to set tasks for yourself';
-            return redirect()->route('task.create')->with('problem2', $message);
+            return redirect()->route('task.create')->with('problem1', $message);
         }else{
             $task = new Task;
             $task->title = $request->title;

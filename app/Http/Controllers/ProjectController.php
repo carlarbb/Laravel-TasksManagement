@@ -17,7 +17,12 @@ class ProjectController extends Controller
      */
     public function index()
     {
-    
+        //
+    }
+
+    public static function count_tasks($project_id){
+        $tasks = DB::table('tasks')->where('project_id', $project_id)->get();
+        return count($tasks);
     }
 
     /**
