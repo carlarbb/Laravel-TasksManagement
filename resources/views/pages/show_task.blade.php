@@ -18,11 +18,13 @@
         </tr>
         <tr>
             <th scope="row">Status</th>
-            <td>{{ $task->status }}</td>
+            <?php $st = Config::get('status'); ?>
+            <td>{{ $st[$task->status] }}</td>
         </tr>
         <tr>
             <th scope="row">Priority level</th>
-            <td>{{ $task->priority_level }}</td>
+            <?php $pr = Config::get('priority'); ?> 
+            <td>{{ $pr[$task->priority_level] }}</td>
         </tr>
         <tr>
             <th scope="row">Body</th>
@@ -30,7 +32,7 @@
         </tr>
         <tr>
             <th scope="row">From project</th>
-            <td>{{ $task->project_id }}</td>
+            <td>{{ $project->title }}</td>
         </tr>
         <tr>
             <th scope="row">Created by user</th>

@@ -121,9 +121,11 @@ class TaskController extends Controller
         $task = Task::find($id);
         $userc = User::find($task->created_by_id);
         $receiver = User::find($task->receiver_id);
+        $proj = Project::find($task->project_id);
         return view('pages.show_task')->with('task', $task)
                                       ->with('uname', $userc->name)
-                                      ->with('rname', $receiver->name);
+                                      ->with('rname', $receiver->name)
+                                      ->with('project', $proj);
     }
 
     /**
@@ -226,6 +228,13 @@ class TaskController extends Controller
 
     public function filter(){
         $tasksForMe = auth()->user()->received_tasks;
+        //take off completed tasks from array $tasksForMe
+        //use array_filter instead for non-associative array 
+        $tasksForMe = $tasksForMe->reject(function ($value, $key) {
+            return $value->completed==1;
+        });
+        
+    
         $value = $_POST['radsort'];
         if($value == '1'){
             $sorted = $tasksForMe->sortBy('due_date');

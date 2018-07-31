@@ -31,6 +31,9 @@ class DashboardController extends Controller
         $myProjects = DB::table('projects')->where('created_by_id', Auth::user()->id)->get();
         $myTasks = DB::table('tasks')->where('created_by_id', Auth::user()->id)->get();
         $tasksForMe = DB::table('tasks')->where('receiver_id', Auth::user()->id)->get();
+        $tasksForMe = $tasksForMe->reject(function ($value, $key) {
+            return $value->completed==1;
+        });
 
         return view('dashboard')->with('user', $user)
                                 ->with('myProjects', $myProjects)

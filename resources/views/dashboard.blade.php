@@ -1,9 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
+<div class="container-fluid">
+    {{-- <div class="row justify-content-center"> --}}
+        {{-- <div class="col-md-8"> --}}
             <div class="card">
                 <div class="card-header">Dashboard</div>
 
@@ -87,8 +87,8 @@
                     <div class="pt-5">
                         <h2>To do tasks</h2>
                         <hr>
-                        
-                        @if(count($tasksForMe) > 0)
+                    
+                        @if(count($tasksForMe)>0)
                             {!! Form::open(['action' => 'TaskController@filter', 'method' => 'POST', 'id' => 'form']) !!}
                                 <h3>Sort tasks by: </h3>
                                 <label class="checkbox-inline"><input type="radio" name="radsort" value="1">Due date</label>
@@ -99,35 +99,38 @@
                                 {{ Form::submit('Sort') }}
                             {!! Form::close() !!}
                             
-                        @if(session('sorted')) 
-                          <?php $tasks = session('sorted'); ?>
-                        @else
-                            <?php $tasks=$tasksForMe ?>
-                        @endif
-                        <table class="table table striped">
-                            <tr>
-                                <th>Title</th>
-                                <th>Info</th>
-                                <th>Edit</th>
-                            </tr>
-                            @foreach($tasks as $task)
-                                {{-- @if($task->due_date >= Carbon\Carbon::now()->toDateTimeString())  --}}
-                                @if($task->status != 'completed')
+                            @if(session('sorted')) 
+                            <?php $tasks = session('sorted'); ?>
+                            @else
+                                <?php $tasks=$tasksForMe ?>
+                            @endif
+                            <table class="table table striped">
                                 <tr>
-                                    <td>{{ $task->title }}</td>
-                                    <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
-                                    <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
+                                    <th>Title</th>
+                                    <th>Info</th>
+                                    <th>Edit</th>
                                 </tr>
-                                @endif 
-                            @endforeach
-                        </table>
+                                @if($tasks == null)
+                                    <td> No to-do tasks </td>
+                                @endif
+                                @foreach($tasks as $task)
+                                    {{-- @if($task->due_date >= Carbon\Carbon::now()->toDateTimeString())  --}}
+                                    @if(!$task->completed)
+                                    <tr>
+                                        <td>{{ $task->title }}</td>
+                                        <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
+                                        <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
+                                    </tr>
+                                    @endif 
+                                @endforeach
+                            </table>
                         @else
                             <p>No to-do tasks</p>
                         @endif
                     </div>
                 </div>
             </div>
-        </div> 
-    </div>
+        {{-- </div>  --}}
+    {{-- </div> --}}
 </div>
 @endsection
