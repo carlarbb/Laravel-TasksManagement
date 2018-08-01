@@ -64,9 +64,11 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show()
     {
-        //
+        $proj_id = $_GET['proj_id'];
+        $project = Project::find($proj_id);
+        return view('pages.show_project')->with('project', $project);
     }
 
     /**

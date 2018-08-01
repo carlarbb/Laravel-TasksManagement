@@ -19,4 +19,5 @@ Route::get('/dashboard', 'DashboardController@index')->name('dashboard');
 Route::post('/task/filter', 'TaskController@filter')->name('task.filter');
 Route::resource('/project', 'ProjectController');
 Route::resource('/task', 'TaskController');
+Route::get('show_project', 'ProjectController@show');
 // Route::patch('/task/filter/{id}',['as' => 'task.filter', 'uses' => 'TaskController@filter']);

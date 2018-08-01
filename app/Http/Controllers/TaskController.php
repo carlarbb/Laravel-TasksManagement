@@ -218,6 +218,8 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         //Check for correct user
+        $project = Project::find($task->project_id);
+        $project->count--;
         if(auth()->user()->id !== $task->created_by_id){
             return redirect()->route('dashboard')->with('error', 'Unauthorized Page');
         }

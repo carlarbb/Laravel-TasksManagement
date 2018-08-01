@@ -17,13 +17,15 @@
                 @if(count($myProjects) >0)
                     <table class="table table striped">
                         <tr>
+                            <th>Id</th>
                             <th>Title</th>
                             <th>No. of tasks</th>
                             <th></th>
                             <th></th>
                         </tr>
                         @foreach($myProjects as $proj)
-                            <tr>
+                            <tr class="projRow" data-toggle="modal" data-target="#myModal">
+                                <td class="projId">{{ $proj->id }}</td>
                                 <td>{{ $proj->title }}</td>
                                 <td>
                                     {{ App\Http\Controllers\ProjectController::count_tasks($proj->id) }}
@@ -44,6 +46,28 @@
             </div>
         </div>        
     </div>   
+
+    <!--Modal for project info at click-->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Project Info</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+
+                {{-- <h2 id='test'></h2> --}}
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="col-md-6"> 
         <div class="card">
@@ -137,4 +161,5 @@
         </div>
     </div>
 </div>
+
 @endsection
