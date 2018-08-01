@@ -68,7 +68,9 @@ class ProjectController extends Controller
     {
         $proj_id = $_GET['proj_id'];
         $project = Project::find($proj_id);
-        return view('pages.show_project')->with('project', $project);
+        $proj_tasks = DB::table('tasks')->where('project_id', $proj_id)->get();
+        return view('pages.show_project')->with('project', $project)
+                                         ->with('proj_tasks', $proj_tasks);
     }
 
     /**

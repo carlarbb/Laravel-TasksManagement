@@ -13,10 +13,14 @@
             {{ Form::label('body', 'Body:') }}
             {{ Form::textarea('body', '', ['id' => 'article-ckeditor', 'class' => 'form-control', 'placeholder' => 'Insert content']) }}
         </div> 
+
+      
         <div class="form-group">
             {{ Form::label('project_id', 'Project Id:') }}
             {{ Form::select('project_id', $project_ids, '', ['class' => 'form-control']) }}
         </div>
+       
+
         <div class="form-group">
             {{ Form::label('status', 'Task Status:') }}
             {{ Form::select('status', $status, '', ['class' => 'form-control']) }}

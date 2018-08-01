@@ -1,20 +1,24 @@
-<table class="table table-dark mt-5">
-    <thead>Project DETAILS</thead>
+<table class="table">
     <tbody>
         <tr>
-            <th scope="row">Id</th>
+            <th>Id</th>
             <td>{{ $project->id }}</td>
         </tr>
         <tr>
-            <th scope="row">Title</th>
+            <th>Title</th>
             <td>{{ $project->title }}</td>
         </tr>
         <tr>
-            <th scope="row">Task list</th>
+            <th>Task list</th>
             <td>
-                <ul class="list-group">
-                    <li class="list-group-item">Cras justo odio</li>
-                      
+                {{-- cand se adauga un task din modal, trimit un parametru GET project_set=1, pt a nu mai afisa
+                     select de project_id in pagina create_task --}}
+                     
+                <a class="btn btn-primary btn-lg" href="{{ route('task.create') }}" role="button">Add new task</a>
+                <ul class="list-group projtask">
+                    @foreach($proj_tasks as $task)
+                        <li class="list-group-item">{{ $task->title }}</li>
+                    @endforeach
                 </ul>
              </td>
         </tr>

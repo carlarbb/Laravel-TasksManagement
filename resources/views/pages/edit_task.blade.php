@@ -34,7 +34,7 @@
             {{ Form::select('receiver_id', $user_ids, $task->receiver_id, ['class' => 'form-control']) }}
         </div>
         {{ Form::hidden('_method', 'PUT') }}
-        {{ Form::submit('Submit', ['class' => 'btn btn-primary']) }}
+        {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
     {!! Form::close() !!}  
 @endsection
 
