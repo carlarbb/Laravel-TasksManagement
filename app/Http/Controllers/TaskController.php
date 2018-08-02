@@ -10,6 +10,7 @@ use App\Task;
 use Illuminate\Support\Facades\Config;
 use App\User;
 
+session_start();
 class TaskController extends Controller
 {
     /**
@@ -60,6 +61,8 @@ class TaskController extends Controller
     {
         $project_ids = self::getProjectIds();
         $user_ids = self::getUserIds();
+        $_SESSION['proj_set'] = $_GET['proj_set'];
+
 
         return view('pages.create_task')->with('project_ids', $project_ids) 
                                         ->with('status', Config::get('status'))
@@ -84,7 +87,7 @@ class TaskController extends Controller
         //You are not allowed to set tasks for yourself
         if($request->receiver_id == auth()->user()->id){
             $message = 'You are not allowed to set tasks for yourself';
-            return redirect()->route('task.create')->with('problem1', $message);
+            return redirect()->route('task.create', ['proj_set' => $_SESSION['proj_set']])->with('problem1', $message);
         }else{
             $task = new Task;
             $task->title = $request->title;
@@ -94,8 +97,12 @@ class TaskController extends Controller
             $task->due_date = $date;
             $task->status = $request->status;
             $task->priority_level = $request->priority;
-            $task->project_id = $request->project_id;
-
+            if($_SESSION['proj_set']){
+                $task->project_id = $_SESSION['proj_set'];
+            }
+            else{
+                $task->project_id = $request->project_id;
+            }
             //use count attribute for displaying the users and projects selects ordered by last choices 
             $proj = Project::find($task->project_id);
             $proj->count++;
@@ -107,7 +114,7 @@ class TaskController extends Controller
             $task->save();
 
             //set a success message when redirect
-            return redirect()->route('task.create')->with('success', 'Task Created');
+            return redirect()->route('task.create', ['proj_set' => $_SESSION['proj_set']])->with('success', 'Task Created');
         }
     }
 

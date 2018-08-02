@@ -1,4 +1,9 @@
-.projtask{
+.scrolladd2 {
     max-height: 300px;
+    overflow: scroll;
+}
+
+.scrolladd1 {
+    max-height: 700px;
     overflow: scroll;
 }

@@ -14,6 +14,12 @@ $(document).ready(function() {
                 $("#modalBody").html(response);
             }
         });
+    });
 
+    $(".dateInput").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        autoClose: true,
+        dateFormat: 'yy-mm-dd',
     });
 });

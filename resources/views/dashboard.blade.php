@@ -48,8 +48,8 @@
     </div>   
 
     <!--Modal for project info at click-->
-    <div class="modal fade" id="myModal" role="dialog" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade" id="myModal" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h2 class="modal-title">Project Info</h2>
@@ -68,8 +68,8 @@
     <div class="col-md-6"> 
         <div class="card">
             <h2 class="card-header text-center">Created tasks</h2>
-            <div class="card-body">
-                <a class="btn btn-primary btn-lg" href="{{ route('task.create') }}" role="button">Add new task</a>
+            <div class="card-body scrolladd1">
+                <a class="btn btn-primary btn-lg" href="{{ route('task.create') }}?proj_set=".null role="button">Add new task</a>
                 <br>
                 @if(count($myTasks) > 0)
                     <table class="table table striped">
@@ -113,7 +113,7 @@
     <div class="col-md-12">
         <div class="card">
             <h2 class="card-header text-center">To do tasks</h2>
-            <div class="card-body">
+            <div class="card-body scrolladd1">
                 @if(count($tasksForMe)>0)
                     {!! Form::open(['action' => 'TaskController@filter', 'method' => 'POST', 'id' => 'form']) !!}
                         <h3>Sort tasks by: </h3>
@@ -133,8 +133,13 @@
                     <table class="table table striped">
                         <tr>
                             <th>Title</th>
-                            <th>Info</th>
-                            <th>Edit</th>
+                            <th>Due date</th>
+                            <th>Priority level</th>
+                            <th>Project title</th>
+                            <th>Project id</th>
+                            <th></th>
+                            <th></th>
+
                         </tr>
                         @if($tasks == null)
                             <td> No to-do tasks </td>
@@ -144,7 +149,13 @@
                             @if(!$task->completed)
                             <tr>
                                 <td>{{ $task->title }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
+                                <td>{{ $task->due_date }}</td>
+                                <?php $pr = Config::get('priority'); ?> 
+                                <td>{{ $pr[$task->priority_level] }}</td>
+                                <?php $proj = App\Project::find($task->project_id); ?>
+                                <td>{{ $proj->title }}</td>
+                                <td>{{ $task->project_id }}</td>
+                                <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Details</a></td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
                             </tr>
                             @endif 
