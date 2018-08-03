@@ -9,6 +9,7 @@ use Illuminate\Database\Query\Builder;
 use App\Task;
 use Illuminate\Support\Facades\Config;
 use App\User;
+use App\History;
 
 session_start();
 class TaskController extends Controller
@@ -112,7 +113,6 @@ class TaskController extends Controller
             $proj->save();
             $user->save();  
             $task->save();
-
             //set a success message when redirect
             return redirect()->route('task.create', ['proj_set' => $_SESSION['proj_set']])->with('success', 'Task Created');
         }
@@ -134,6 +134,11 @@ class TaskController extends Controller
                                       ->with('uname', $userc->name)
                                       ->with('rname', $receiver->name)
                                       ->with('project', $proj);
+    }
+
+    public function history(Request $request){
+        $history = DB::table('history')->get();
+        return view('pages.show_task_history')->with('history', $history);
     }
 
     /**
@@ -185,6 +190,14 @@ class TaskController extends Controller
                 return redirect()->route('task.edit', $task->id)->with('problem1', $message);
             }
             else{
+                if($request->receiver_id != $task->receiver_id){ //update history table
+                    $hist = new History;
+                    $hist->task_id = $task->id;
+                    $hist->creator_id = $task->created_by_id;
+                    $hist->from_user_id = $task->receiver_id; 
+                    $hist->to_user_id = $request->receiver_id;
+                    $hist->save();
+                }
                 $task->receiver_id = $request->receiver_id;
                 $task->title = $request->title;
                 $task->content = $request->body;
