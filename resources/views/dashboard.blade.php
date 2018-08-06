@@ -105,9 +105,12 @@
                                             Forward to
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <a class="dropdown-item" href="#">Something else here</a>
+                                            <?php $all_users = DB::table('users')->get();?> 
+                                            @foreach($all_users as $user)
+                                                @if($user->id != $task->receiver_id)
+                                                    <a class="dropdown-item" href="{!! route('task.change_receiver', ['id_task'=>$task->id, 'id_user'=>$user->id]) !!}">{{ $user->id }} - {{ $user->name }} </a>
+                                                 @endif
+                                            @endforeach
                                         </div>
                                     </div>
                                 </td>
@@ -152,6 +155,7 @@
                             <th>Project id</th>
                             <th></th>
                             <th></th>
+                            <th></th>
 
                         </tr>
                         @if($tasks == null)
@@ -170,6 +174,15 @@
                                 <td>{{ $task->project_id }}</td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Details</a></td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
+                                <td>
+                                    <?php 
+                                        session([
+                                            'currentTaskId' => $task->id,
+                                            'currentTaskReceiver' => $task->receiver_id,
+                                        ]);
+                                    ?>
+                                    @include('live_search_user')
+                                </td>
                             </tr>
                             @endif 
                         @endforeach

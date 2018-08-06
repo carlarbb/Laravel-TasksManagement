@@ -85,37 +85,32 @@ class TaskController extends Controller
             'body' => 'required',
             'due_date' => 'required' 
         ]);
-        //You are not allowed to set tasks for yourself
-        if($request->receiver_id == auth()->user()->id){
-            $message = 'You are not allowed to set tasks for yourself';
-            return redirect()->route('task.create', ['proj_set' => $_SESSION['proj_set']])->with('problem1', $message);
-        }else{
-            $task = new Task;
-            $task->title = $request->title;
-            $task->content = $request->body;
-            $task->created_by_id = $request->user()->id;
-            $date = $request->due_date;
-            $task->due_date = $date;
-            $task->status = $request->status;
-            $task->priority_level = $request->priority;
-            if($_SESSION['proj_set']){
-                $task->project_id = $_SESSION['proj_set'];
-            }
-            else{
-                $task->project_id = $request->project_id;
-            }
-            //use count attribute for displaying the users and projects selects ordered by last choices 
-            $proj = Project::find($task->project_id);
-            $proj->count++;
-            $task->receiver_id = $request->receiver_id;
-            $user = User::find($task->receiver_id);
-            $user->count++;
-            $proj->save();
-            $user->save();  
-            $task->save();
-            //set a success message when redirect
-            return redirect()->route('task.create', ['proj_set' => $_SESSION['proj_set']])->with('success', 'Task Created');
+        $task = new Task;
+        $task->title = $request->title;
+        $task->content = $request->body;
+        $task->created_by_id = $request->user()->id;
+        $date = $request->due_date;
+        $task->due_date = $date;
+        $task->status = $request->status;
+        $task->priority_level = $request->priority;
+        if($_SESSION['proj_set']){
+            $task->project_id = $_SESSION['proj_set'];
         }
+        else{
+            $task->project_id = $request->project_id;
+        }
+        //use count attribute for displaying the users and projects selects ordered by last choices 
+        $proj = Project::find($task->project_id);
+        $proj->count++;
+        $task->receiver_id = $request->receiver_id;
+        $user = User::find($task->receiver_id);
+        $user->count++;
+        $proj->save();
+        $user->save();  
+        $task->save();
+        //set a success message when redirect
+        return redirect()->route('task.create', ['proj_set' => $_SESSION['proj_set']])->with('success', 'Task Created');
+    
     }
 
     /**
@@ -185,26 +180,22 @@ class TaskController extends Controller
                 'body' => 'required',
                 'due_date' => 'required'
             ]);
-            if($request->receiver_id == auth()->user()->id){
-                $message = 'You are not allowed to set tasks for yourself';
-                return redirect()->route('task.edit', $task->id)->with('problem1', $message);
+           
+            if($request->receiver_id != $task->receiver_id){ //update history table
+                $hist = new History;
+                $hist->task_id = $task->id;
+                $hist->creator_id = $task->created_by_id;
+                $hist->from_user_id = $task->receiver_id; 
+                $hist->to_user_id = $request->receiver_id;
+                $hist->save();
             }
-            else{
-                if($request->receiver_id != $task->receiver_id){ //update history table
-                    $hist = new History;
-                    $hist->task_id = $task->id;
-                    $hist->creator_id = $task->created_by_id;
-                    $hist->from_user_id = $task->receiver_id; 
-                    $hist->to_user_id = $request->receiver_id;
-                    $hist->save();
-                }
-                $task->receiver_id = $request->receiver_id;
-                $task->title = $request->title;
-                $task->content = $request->body;
-                $task->status = $request->status;
-                $task->priority_level = $request->priority;
-                $task->project_id = $request->project_id;
-            }
+            $task->receiver_id = $request->receiver_id;
+            $task->title = $request->title;
+            $task->content = $request->body;
+            $task->status = $request->status;
+            $task->priority_level = $request->priority;
+            $task->project_id = $request->project_id;
+            
         }
         else{
             $c = count(Config::get('status'));
@@ -216,17 +207,19 @@ class TaskController extends Controller
             }
             else
             {
-                if($request->receiver_id != $task->created_by_id){
-                    $task->receiver_id = $request->receiver_id;
-                }else{
-                    $message = 'You are not allowed to set tasks for yourself';
-                    return redirect()->route('task.edit', $task->id)->with('problem1', $message);
-                }
+                $task->receiver_id = $request->receiver_id;
                 $task->status = $request->status;
             }
         }
         $task->save();
         return redirect()->route('dashboard')->with('success', 'Task Updated Successfully');
+    }
+
+    public function change_receiver($id_task, $id_user){
+        $task = Task::find($id_task);
+        $task->receiver_id = $id_user;
+        $task->save();
+        return redirect()->route('dashboard')->with('success', 'Receiver updated!');
     }
 
     /**
