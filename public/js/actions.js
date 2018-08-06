@@ -16,27 +16,34 @@ $(document).ready(function() {
         });
     });
 
-    $(".dateInput").datepicker({
-        changeMonth: true,
-        changeYear: true,
-        autoClose: true,
-        dateFormat: 'yy-mm-dd',
-    });
+});
 
-    function fetch_users(query = '') {
-        $.ajax({
-            url: urlLive,
-            method: 'GET',
-            data: { query: query },
-            dataType: 'json'
-        }).done(function(data) {
-            alert(data.text);
-            $('.forwardMenu').html(data.text);
-        });
-    }
 
-    $(document).on('keyup', '#search', function() {
-        var query = $(this).val();
-        fetch_users(query);
-    });
+$(".dateInput").datepicker({
+    changeMonth: true,
+    changeYear: true,
+    autoClose: true,
+    dateFormat: 'yy-mm-dd',
+});
+
+
+$("#userList").select2({
+    placeholder: "Select user name",
+    allowClear: true,
+    ajax: {
+        url:urlLive,
+        dataType: 'json',
+        data: function(params){
+            var query= {
+                search: params.term,
+                type: 'public'
+            }
+            return query;
+        },
+        processResults: function(data){
+            return{
+                results:data
+            };
+        }
+     }
 });

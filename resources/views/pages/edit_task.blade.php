@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('content')
+@section('content') 
     <h1 class="pt-3 pb-3">Edit task</h1>
     <!-- store e functia care se apeleaza la submit -->
     {{-- enctype pt incarcare de fisiere --}}
