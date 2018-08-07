@@ -34,7 +34,6 @@ class DashboardController extends Controller
         $tasksForMe = $tasksForMe->reject(function ($value, $key) {
             return $value->completed==1;
         });
-
         return view('dashboard')->with('user', $user)
                                 ->with('myProjects', $myProjects)
                                 ->with('myTasks', $myTasks)

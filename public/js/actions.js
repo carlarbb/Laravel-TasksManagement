@@ -16,6 +16,26 @@ $(document).ready(function() {
         });
     });
 
+    $(".userList").change(function() {
+        var val = this.value;
+        var task_id = $(this).data('id');
+        urlchange = urlchange.replace(':id1', task_id);
+        urlchange = urlchange.replace(':id2', val);
+        $.ajax({
+            type: "GET",
+            url: urlchange,
+            dataType: 'html',
+            data: {
+                id_task: task_id,
+                id_user: val
+            },
+        }).done(function(data) {
+            // window.replaceWith(data);
+            window.location.reload(true);
+
+        });
+    });
+
 });
 
 
@@ -24,26 +44,4 @@ $(".dateInput").datepicker({
     changeYear: true,
     autoClose: true,
     dateFormat: 'yy-mm-dd',
-});
-
-
-$("#userList").select2({
-    placeholder: "Select user name",
-    allowClear: true,
-    ajax: {
-        url:urlLive,
-        dataType: 'json',
-        data: function(params){
-            var query= {
-                search: params.term,
-                type: 'public'
-            }
-            return query;
-        },
-        processResults: function(data){
-            return{
-                results:data
-            };
-        }
-     }
 });

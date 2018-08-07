@@ -36,5 +36,11 @@
         {{ Form::hidden('_method', 'PUT') }}
         {{ Form::submit('Save', ['class' => 'btn btn-primary']) }}
     {!! Form::close() !!}  
+    @section('page_scripts')
+        <script src="/vendor/unisharp/laravel-ckeditor/ckeditor.js"></script> 
+        <script>
+            CKEDITOR.replace( 'article-ckeditor' );
+        </script>
+    @endsection
 @endsection
 

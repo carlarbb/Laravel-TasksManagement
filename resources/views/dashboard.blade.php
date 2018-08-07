@@ -79,7 +79,7 @@
                             <th></th>
                             <th></th>
                             <th>Completed</th>
-                            <th></th>
+                            <th>Forward to</th>
                         </tr>
                         @foreach($myTasks as $task)
                             <tr>
@@ -100,19 +100,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            Forward to
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                            <?php $all_users = DB::table('users')->get();?> 
-                                            @foreach($all_users as $user)
-                                                @if($user->id != $task->receiver_id)
-                                                    <a class="dropdown-item" href="{!! route('task.change_receiver', ['id_task'=>$task->id, 'id_user'=>$user->id]) !!}">{{ $user->id }} - {{ $user->name }} </a>
-                                                 @endif
-                                            @endforeach
-                                        </div>
-                                    </div>
+                                    @include('live_search_user')
                                 </td>
                             </tr>
                         @endforeach
@@ -155,13 +143,14 @@
                             <th>Project id</th>
                             <th></th>
                             <th></th>
-                            <th></th>
+                            <th>Forward to</th>
 
                         </tr>
                         @if($tasks == null)
                             <td> No to-do tasks </td>
                         @endif
                         @foreach($tasks as $task)
+                        
                             {{-- @if($task->due_date >= Carbon\Carbon::now()->toDateTimeString())  --}}
                             @if(!$task->completed)
                             <tr>
@@ -175,12 +164,6 @@
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Details</a></td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
                                 <td>
-                                    <?php 
-                                        session([
-                                            'currentTaskId' => $task->id,
-                                            'currentTaskReceiver' => $task->receiver_id,
-                                        ]);
-                                    ?>
                                     @include('live_search_user')
                                 </td>
                             </tr>

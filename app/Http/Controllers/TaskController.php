@@ -215,10 +215,11 @@ class TaskController extends Controller
         return redirect()->route('dashboard')->with('success', 'Task Updated Successfully');
     }
 
-    public function change_receiver($id_task, $id_user){
+    public function change_receiver(Request $request, $id_task, $id_user){
         $task = Task::find($id_task);
         $task->receiver_id = $id_user;
         $task->save();
+       // echo json_encode(['url' => route('dashboard')]);
         return redirect()->route('dashboard')->with('success', 'Receiver updated!');
     }
 

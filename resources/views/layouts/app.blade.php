@@ -27,7 +27,6 @@
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">   
 </head>
 <body>
-    cum era inainte de mergea? cred ca alea 2 erau ultimele sub asta? par
     <div id="app">
         @include('inc.navbar')
         <div class="container-fluid">
@@ -35,9 +34,7 @@
             @yield('content')   
         </div>
     </div>
-
-    <!-- Scripts -->
+    @yield('page_scripts')
     <script src="{{ asset('/js/actions.js') }}"></script>
-
 </body>
 </html>
