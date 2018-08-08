@@ -2,6 +2,9 @@
 
 @section('content')
 <h1 class="text-center p-5">Dashboard</h1>
+<div class="row" id="search_for_task">
+    @include('live_search_task');
+</div>
 <div class="row">
     <div class="col-md-6">
         @if (session('status'))

@@ -30,7 +30,6 @@ $(document).ready(function() {
                 id_user: val
             },
         }).done(function(data) {
-            // window.replaceWith(data);
             window.location.reload(true);
 
         });

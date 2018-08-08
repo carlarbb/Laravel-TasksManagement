@@ -1,7 +1,6 @@
-
 <select class="userList form-control" data-id={{$task->id}} name="userList"></select>
 <script>
-        var urlLive = "{{ route('live_search.action') }}";
+        var urlLive = "{{ route('live_search.action_user') }}";
         var urlchange = "{{ route('task.change_receiver', ['id_task' => ':id1', 'id_user' => ':id2']) }}"; 
 
     $(".userList").select2({
@@ -24,5 +23,4 @@
             }
         }
     });
-
 </script>

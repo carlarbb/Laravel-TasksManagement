@@ -12,3 +12,12 @@
 .userList {
     width: 100%;
 }
+
+#search_for_task {
+    padding: 30px;
+    padding-left: 0;
+}
+
+#submitButton {
+    display: block;
+}

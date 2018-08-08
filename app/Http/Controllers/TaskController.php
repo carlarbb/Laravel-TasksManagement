@@ -119,6 +119,7 @@ class TaskController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function show($id)
     {
         $task = Task::find($id);
@@ -201,6 +202,7 @@ class TaskController extends Controller
             $c = count(Config::get('status'));
             if($request->status == $c)
             {
+                $task->status = $c;
                 $task->completed = 1;
                 $task->save();
                 return redirect()->route('dashboard')->with('success', 'Completed task');
