@@ -33,12 +33,9 @@
                                 <td>
                                     {{ App\Http\Controllers\ProjectController::count_tasks($proj->id) }}
                                 </td>
-                                <td><a class="btn btn-primary btn-sm" href="{{ route('project.edit', $proj->id) }}" role="button">Edit</a></td> 
+                                <td><a class="btn btn-primary btn-sm" onclick="event.stopPropagation();" href="{{ route('project.edit', $proj->id) }}" role="button">Edit</a></td> 
                                 <td>
-                                    {!! Form::open(['action' => ['ProjectController@destroy', $proj->id], 'method' => 'POST']) !!}
-                                        {{ Form::hidden('_method', 'DELETE') }}
-                                        {{ Form::submit('Delete', ['class' => 'btn btn-danger btn-sm']) }}
-                                    {!! Form::close() !!}
+                                <button type="button" id="confirmDelete" href="{{ route('project.destroy', $proj->id) }}" class="btn btn-info btn-sm" data-toggle="modal" data-target="#confirmModal">Delete</button>
                                 </td>
                             </tr>
                             @endforeach
@@ -67,6 +64,24 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="confirmModal" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Are you sure you want to delete this?</h2>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" id="modalBody"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <a class="btn btn-danger btn-ok">Delete</a>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     <div class="col-md-6"> 
         <div class="card">
@@ -180,5 +195,4 @@
         </div>
     </div>
 </div>
-
 @endsection

@@ -127,7 +127,18 @@ class ProjectController extends Controller
             return redirect()->route('dashboard')->with('error', 'Unauthorized Page');
         }
 
-        $project->delete();
+        $proj_tasks = DB::table('tasks')->where('project_id', $id)->get();
+        if($proj_tasks->isEmpty()){
+            $project->delete();
+        }
+        else{
+            foreach($proj_tasks as $task){
+                $task_object = DB::table('tasks')->where('id', $task->id);
+                $task_object->delete();
+            }
+            $project->delete();
+        }
+        
         return redirect()->route('dashboard')->with('success', 'Project Removed');
     }
 }

@@ -19,5 +19,9 @@
 }
 
 #submitButton {
-    display: block;
+    visibility: hidden;
+}
+
+#formId {
+    width: 100%;
 }

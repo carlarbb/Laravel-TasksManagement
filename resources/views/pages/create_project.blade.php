@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
  @section('content')
+    <button id="backButton" onclick="history.go(-1);">Back </button>
     <h1>Create new project</h1>
     <!-- store e functia care se apeleaza la submit -->
     {{-- enctype pt incarcare de fisiere --}}

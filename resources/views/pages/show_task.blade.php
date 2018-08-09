@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
  @section('content')
+ <button id="backButton" onclick="history.go(-1);">Back </button>
  <table class="table table-dark mt-5">
     <thead>TASK DETAILS</thead>
     <tbody>

@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
  @section('content')
+    <button id="backButton" onclick="history.go(-1);">Back </button>
     <h1>Edit project</h1>
     {!! Form::open(['action' => ['ProjectController@update', $project->id], 'method' => 'POST']) !!} 
         <div class="form-group">

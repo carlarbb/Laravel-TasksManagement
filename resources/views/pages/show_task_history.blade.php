@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<button id="backButton" onclick="history.go(-1);">Back </button>
 @if($history != [])
 <table class="table">
     <tbody>
