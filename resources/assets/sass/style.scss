@@ -1,0 +1,27 @@
+.scrolladd2,
+.dropdown-menu {
+    max-height: 300px;
+    overflow: scroll;
+}
+
+.scrolladd1 {
+    max-height: 700px;
+    overflow: scroll;
+}
+
+.userList {
+    width: 100%;
+}
+
+#search_for_task {
+    padding: 30px;
+    padding-left: 0;
+}
+
+#submitButton {
+    visibility: hidden;
+}
+
+#formId {
+    width: 100%;
+}
