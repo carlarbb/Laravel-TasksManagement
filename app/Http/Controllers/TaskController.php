@@ -120,9 +120,8 @@ class TaskController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function show($id)
+    public function show(Request $request, Task $task)
     {
-        $task = Task::find($id);
         $userc = User::find($task->created_by_id);
         $receiver = User::find($task->receiver_id);
         $proj = Project::find($task->project_id);
@@ -217,9 +216,9 @@ class TaskController extends Controller
         return redirect()->route('dashboard')->with('success', 'Task Updated Successfully');
     }
 
-    public function change_receiver(Request $request, $id_task, $id_user){
-        $task = Task::find($id_task);
-        $task->receiver_id = $id_user;
+    public function change_receiver(Request $request){
+        $task = Task::find($request->id_task);
+        $task->receiver_id = $request->id_user;
         $task->save();
        // echo json_encode(['url' => route('dashboard')]);
         return redirect()->route('dashboard')->with('success', 'Receiver updated!');
@@ -254,7 +253,7 @@ class TaskController extends Controller
         });
         
     
-        $value = $_POST['radsort'];
+        $value = $_GET['radsort'];
         if($value == '1'){
             $sorted = $tasksForMe->sortBy('due_date');
         }

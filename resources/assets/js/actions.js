@@ -6,6 +6,9 @@ $(document).ready(function() {
         // $("#test").html(proj_id);
 
         $.ajax({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
             type: "GET",
             url: './show_project',
             dataType: "html", //expect html to be returned        
@@ -19,10 +22,14 @@ $(document).ready(function() {
     $(".userList").change(function() {
         var val = this.value;
         var task_id = $(this).data('id');
-        urlchange = urlchange.replace(':id1', task_id);
-        urlchange = urlchange.replace(':id2', val);
+        /*  urlchange = urlchange.replace(':id1', task_id);
+          urlchange = urlchange.replace(':id2', val);
+        */
         $.ajax({
-            type: "GET",
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            type: "POST",
             url: urlchange,
             dataType: 'html',
             data: {

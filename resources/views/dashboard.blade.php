@@ -102,7 +102,7 @@
                         @foreach($myTasks as $task)
                             <tr>
                                 <td>{{ $task->title }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Info</a></td>
+                                <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', '{$task}') }}" role="button">Info</a></td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
                                 <td>
                                     {!! Form::open(['action' => ['TaskController@destroy', $task->id], 'method' => 'POST']) !!}
@@ -137,7 +137,7 @@
             <h2 class="card-header text-center">To do tasks</h2>
             <div class="card-body scrolladd1">
                 @if(count($tasksForMe)>0)
-                    {!! Form::open(['action' => 'TaskController@filter', 'method' => 'POST', 'id' => 'form']) !!}
+                    {!! Form::open(['action' => 'TaskController@filter', 'method' => 'GET', 'id' => 'form']) !!}
                         <h3>Sort tasks by: </h3>
                         <label class="checkbox-inline"><input type="radio" name="radsort" value="1">Due date</label>
                         <label class="checkbox-inline"><input type="radio" name="radsort" value="2">Priority level</label>
@@ -179,7 +179,7 @@
                                 <?php $proj = App\Project::find($task->project_id); ?>
                                 <td>{{ $proj->title }}</td>
                                 <td>{{ $task->project_id }}</td>
-                                <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', $task->id) }}" role="button">Details</a></td>
+                                <td><a class="btn btn-primary btn-sm" href="{{ route('task.show', '{$task}') }}" role="button">Details</a></td>
                                 <td><a class="btn btn-primary btn-sm" href="{{ route('task.edit', $task->id) }}" role="button">Edit</a></td> 
                                 <td>
                                     @include('live_search_user')
